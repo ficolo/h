@@ -5,12 +5,27 @@ function encodeUriQuery(val) {
   return encodeURIComponent(val).replace(/%20/g, '+');
 }
 
+function queryHeaders() {
+  try {
+    var state = JSON.parse(window.localStorage.getItem("sessionState"));
+    var headers = {};
+    if (state.api_token) {
+      headers['Authorization'] = 'Bearer ' + state.api_token;
+    }
+    return headers;
+  } catch (err) {
+    return {};
+  }
+}
+
 /**
  * Queries the Hypothesis service that provides
  * statistics about the annotations for a given URL.
  */
 function query(uri) {
-  return fetch(settings.apiUrl + '/badge?uri=' + encodeUriQuery(uri))
+  return fetch(settings.apiUrl + '/badge?uri=' + encodeUriQuery(uri), {
+    headers: new Headers(queryHeaders())
+  })
     .then(function (res) {
     return res.json();
   }).then(function (data) {

@@ -17,6 +17,8 @@ def model(request):
         user = request.authenticated_user
         if user and not user.sidebar_tutorial_dismissed:
             session['preferences']['show_sidebar_tutorial'] = True
+    session['api_token'] = '{}:TOKEN'.format(request.authenticated_userid)
+    session['extension_ids'] = ['chrome-ext-id', 'chrome-staging-ext-id']
     return session
 
 

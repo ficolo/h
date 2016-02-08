@@ -15,6 +15,36 @@ var ACCOUNT_ACTIONS = [
   ['disable_user', 'POST']
 ];
 
+function reportSessionStateToExtension(state) {
+  if (!window.chrome) {
+    return;
+  }
+
+  var stateMessage = {
+    type: 'SIDEBAR_SESSION_STATE_CHANGED',
+    state: state,
+  };
+
+  // when sidebar is served from the extension,
+  // send the session state to the parent
+  var currentExtensionID = chrome.runtime.id;
+  if (currentExtensionID) {
+    chrome.runtime.sendMessage(stateMessage);
+  }
+
+  // when sidebar is served from the app,
+  // send the session state to all registered extensions
+  if (state.extension_ids) {
+    state.extension_ids.forEach(function (id) {
+      if (id === currentExtensionID) {
+        // we have already notified ourselves earlier
+        return;
+      }
+      chrome.runtime.sendMessage(id, stateMessage);
+    });
+  }
+}
+
 function sessionActions(options) {
   var actions = {};
 
@@ -124,6 +154,8 @@ function session($http, $resource, $rootScope, flash, raven, settings) {
 
     // Copy the model data (including the CSRF token) into `resource.state`.
     angular.copy(model, resource.state);
+
+    reportSessionStateToExtension(model);
 
     // Set up subsequent requests to send the CSRF token in the headers.
     if (resource.state.csrf) {

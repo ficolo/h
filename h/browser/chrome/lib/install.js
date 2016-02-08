@@ -19,6 +19,20 @@ chrome.runtime.requestUpdateCheck(function (status) {
   chrome.runtime.onUpdateAvailable.addListener(onUpdateAvailable);
 });
 
+chrome.runtime.onMessage.addListener(function (message, sender, response) {
+  switch (message.type) {
+    case 'SIDEBAR_SESSION_STATE_CHANGED':
+      // TODO - Refresh badge counts for tabs if the user account changed
+      // TODO - Set Raven.js user ID context using this info
+      console.log('Received sidebar session state', message.state);
+      var stateJSON = JSON.stringify(message.state);
+      window.localStorage.setItem('sessionState', stateJSON);
+      break;
+    default:
+      break;
+  }
+});
+
 function onInstalled(installDetails) {
   if (installDetails.reason === 'install') {
     browserExtension.firstRun(installDetails);
