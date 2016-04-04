@@ -1,4 +1,4 @@
-{module, inject} = angular.mock
+proxyquire = require('proxyquire')
 
 poem =
   tiger: 'Tiger! Tiger! burning bright
@@ -13,33 +13,17 @@ poem =
           Only this and nothing more.”'
 
 describe 'viewFilter', ->
-  sandbox = null
   fakeUnicode = null
   viewFilter = null
 
-  before ->
-    angular.module('h', [])
-    .service('viewFilter', require('../view-filter'))
-
-
-  beforeEach module('h')
-  beforeEach module ($provide) ->
-    sandbox = sinon.sandbox.create()
-
+  beforeEach ->
     fakeUnicode = {
       fold: sinon.stub().returnsArg(0)
       normalize: sinon.stub().returnsArg(0)
     }
-
-    $provide.value('unicode', fakeUnicode)
-    return
-
-  beforeEach inject (_viewFilter_) ->
-    viewFilter = _viewFilter_
-
-  afterEach ->
-    sandbox.restore()
-
+    viewFilter = proxyquire('../view-filter', {
+      './unicode': fakeUnicode,
+    })
 
   describe 'filter', ->
     it 'normalizes the filter terms', ->
@@ -82,9 +66,9 @@ describe 'viewFilter', ->
     describe 'fields', ->
       describe 'autofalse', ->
         it 'consider auto false function', ->
-          viewFilter.fields =
+          fields =
             test:
-              autofalse: sandbox.stub().returns(true)
+              autofalse: sinon.stub().returns(true)
               value: (annotation) -> return annotation.test
               match: (term, value) -> return value.indexOf(term) > -1
 
@@ -95,15 +79,15 @@ describe 'viewFilter', ->
 
           annotations = [{id: 1, test: poem.tiger}]
 
-          result = viewFilter.filter annotations, filters
-          assert.called viewFilter.fields.test.autofalse
+          result = viewFilter.filter annotations, filters, fields
+          assert.called fields.test.autofalse
           assert.equal result.length, 0
 
         it 'uses the value function to extract data from the annotation', ->
-          viewFilter.fields =
+          fields =
             test:
               autofalse: (annotation) -> return false
-              value: sandbox.stub().returns('test')
+              value: sinon.stub().returns('test')
               match: (term, value) -> return value.indexOf(term) > -1
 
           filters =
@@ -113,16 +97,16 @@ describe 'viewFilter', ->
 
           annotations = [{id: 1, test: poem.tiger}]
 
-          result = viewFilter.filter annotations, filters
-          assert.called viewFilter.fields.test.value
+          result = viewFilter.filter annotations, filters, fields
+          assert.called fields.test.value
           assert.equal result.length, 1
 
         it 'the match function determines the matching', ->
-          viewFilter.fields =
+          fields =
             test:
               autofalse: (annotation) -> return false
               value: (annotation) -> return annotation.test
-              match: sandbox.stub().returns(false)
+              match: sinon.stub().returns(false)
 
           filters =
             test:
@@ -131,13 +115,13 @@ describe 'viewFilter', ->
 
           annotations = [{id: 1, test: poem.tiger}]
 
-          result = viewFilter.filter annotations, filters
-          assert.called viewFilter.fields.test.match
+          result = viewFilter.filter annotations, filters, fields
+          assert.called fields.test.match
           assert.equal result.length, 0
 
-          viewFilter.fields.test.match.returns(true)
-          result = viewFilter.filter annotations, filters
-          assert.called viewFilter.fields.test.match
+          fields.test.match.returns(true)
+          result = viewFilter.filter annotations, filters, fields
+          assert.called fields.test.match
           assert.equal result.length, 1
 
     describe 'any field', ->

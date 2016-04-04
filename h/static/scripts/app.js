@@ -173,9 +173,6 @@ module.exports = angular.module('h', [
   .service('session', require('./session'))
   .service('streamFilter', require('./stream-filter'))
   .service('tags', require('./tags'))
-  .service('unicode', require('./unicode'))
-  .service('viewFilter', require('./view-filter'))
-
   .factory('store', require('./store'))
 
   .value('AnnotationSync', require('./annotation-sync'))
@@ -188,6 +185,8 @@ module.exports = angular.module('h', [
   .value('settings', settings)
   .value('time', require('./time'))
   .value('urlEncodeFilter', require('./filter/url').encode)
+  .value('viewFilter', require('./view-filter'))
+  .value('unicode', require('./unicode'))
 
   .config(configureHttp)
   .config(configureLocation)
