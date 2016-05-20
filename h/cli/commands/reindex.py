@@ -3,7 +3,7 @@
 import click
 import elasticsearch.helpers
 
-from h.api.search import config
+from memex.search import config
 
 
 @click.command()

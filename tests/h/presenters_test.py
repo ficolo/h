@@ -3,7 +3,7 @@ import mock
 import jinja2
 
 from h import presenters
-from h.api.models import elastic
+from memex.models import elastic
 
 
 def _annotation(annotation=None, **kwargs):

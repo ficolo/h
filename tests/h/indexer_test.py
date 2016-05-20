@@ -4,7 +4,7 @@ import mock
 import pytest
 from pyramid.testing import DummyRequest
 
-from h.api import events
+from memex import events
 from h import indexer
 
 

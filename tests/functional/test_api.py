@@ -22,7 +22,7 @@ class TestAPI(object):
 
 @pytest.fixture
 def annotation(config):
-    from h.api.models.elastic import Annotation
+    from memex.models.elastic import Annotation
     ann = Annotation({
         'created': '2016-01-01T00:00:00.000000+00:00',
         'updated': '2016-01-01T00:00:00.000000+00:00',

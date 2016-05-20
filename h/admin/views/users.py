@@ -8,7 +8,7 @@ from pyramid.view import view_config
 from h import models
 from h import util
 from h.accounts.events import ActivationEvent
-from h.api import storage
+from memex import storage
 from h.i18n import TranslationString as _
 
 

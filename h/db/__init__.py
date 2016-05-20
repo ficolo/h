@@ -21,7 +21,7 @@ from sqlalchemy import engine_from_config
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-from h.api import db as api_db
+from memex import db as api_db
 
 __all__ = (
     'Base',
@@ -44,7 +44,7 @@ Session = scoped_session(sessionmaker())
 #   http://docs.sqlalchemy.org/en/latest/core/constraints.html#configuring-constraint-naming-conventions
 #
 # N.B. This must be kept in sync with the naming conventions in
-# :py:mod:`h.api.db`.
+# :py:mod:`memex.db`.
 #
 metadata = MetaData(naming_convention={
     "ix": "ix__%(column_0_label)s",

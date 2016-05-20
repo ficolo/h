@@ -5,9 +5,9 @@ from copy import deepcopy
 from h import __version__
 from h import emails
 from h import mailer
-from h.api import presenters
-from h.api import storage
-from h.api.events import AnnotationTransformEvent
+from memex import presenters
+from memex import storage
+from memex.events import AnnotationTransformEvent
 from h.notification import reply
 
 

@@ -15,7 +15,7 @@ from pyramid import testing
 
 from h import db
 from h import form
-from h.api import db as api_db
+from memex import db as api_db
 from h.settings import database_url
 
 

@@ -16,11 +16,11 @@ from pyramid.request import Request
 from sqlalchemy.orm import scoped_session, sessionmaker
 
 from h import db
-from h.api.db import Base as APIBase
-from h.api.models import elastic
-from h.api.models.annotation import Annotation
-from h.api.models.document import Document, DocumentURI, DocumentMeta
-from h.api.models.document import merge_documents
+from memex.db import Base as APIBase
+from memex.models import elastic
+from memex.models.annotation import Annotation
+from memex.models.document import Document, DocumentURI, DocumentMeta
+from memex.models.document import merge_documents
 
 BATCH_SIZE = 2000
 

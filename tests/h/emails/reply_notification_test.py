@@ -6,7 +6,7 @@ import mock
 from pyramid.testing import DummyRequest
 import pytest
 
-from h.api.models import elastic
+from memex.models import elastic
 from h.emails.reply_notification import generate
 from h.models import Annotation
 from h.models import Document, DocumentMeta

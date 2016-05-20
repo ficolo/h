@@ -8,7 +8,7 @@ from gevent.queue import Full
 
 from h import realtime
 from h.realtime import Consumer
-from h.api import storage
+from memex import storage
 from h.auth.util import translate_annotation_principals
 from h.streamer import websocket
 import h.sentry

@@ -2,7 +2,7 @@ from pyramid import httpexceptions
 
 from h import models
 from h.util.view import json_view
-from h.api import search as search_lib
+from memex import search as search_lib
 
 
 @json_view(route_name='badge')

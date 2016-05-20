@@ -8,7 +8,7 @@ import datetime
 
 import factory
 
-from h.api import storage
+from memex import storage
 from h.accounts import models as accounts_models
 
 

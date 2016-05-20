@@ -6,8 +6,8 @@ import pytest
 from pyramid import testing
 
 from h import subscribers
-from h.api import models
-from h.api.events import AnnotationEvent
+from memex import models
+from memex.events import AnnotationEvent
 
 
 class FakeMailer(object):

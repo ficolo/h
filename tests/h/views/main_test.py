@@ -6,8 +6,8 @@ from mock import patch, MagicMock, PropertyMock
 from pyramid import testing
 import pytest
 
-from h.api.models.annotation import Annotation
-from h.api.models.document import Document
+from memex.models.annotation import Annotation
+from memex.models.document import Document
 from h.views import main
 
 
@@ -49,13 +49,13 @@ def test_og_no_document(render_app_html):
 
 @pytest.fixture
 def annotation_document(patch):
-    return patch('h.api.models.annotation.Annotation.document',
+    return patch('memex.models.annotation.Annotation.document',
                  autospec=None,
                  new_callable=PropertyMock)
 
 
 @pytest.fixture
 def document_title(patch):
-    return patch('h.api.models.document.Document.title',
+    return patch('memex.models.document.Document.title',
                  autospec=None,
                  new_callable=PropertyMock)

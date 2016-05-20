@@ -10,7 +10,7 @@ import jsonschema
 from pyramid.threadlocal import get_current_request
 from ws4py.websocket import WebSocket as _WebSocket
 
-from h.api import storage
+from memex import storage
 from h.streamer import filter
 
 log = logging.getLogger(__name__)

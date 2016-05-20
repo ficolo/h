@@ -6,7 +6,7 @@ import pytest
 from pyramid.testing import DummyRequest
 
 from h import db
-from h.api.models import elastic
+from memex.models import elastic
 from h.models import Annotation
 from h.models import Document, DocumentMeta
 from h.models import Subscriptions

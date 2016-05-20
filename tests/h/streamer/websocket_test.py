@@ -74,7 +74,7 @@ def test_handle_message_sets_socket_client_id_for_client_id_messages():
     assert socket.client_id == 'abcd1234'
 
 
-@mock.patch('h.api.storage.expand_uri')
+@mock.patch('memex.storage.expand_uri')
 def test_handle_message_sets_socket_filter_for_filter_messages(expand_uri):
     expand_uri.return_value = ['http://example.com']
     socket = mock.Mock()
@@ -96,7 +96,7 @@ def test_handle_message_sets_socket_filter_for_filter_messages(expand_uri):
     assert socket.filter is not None
 
 
-@mock.patch('h.api.storage.expand_uri')
+@mock.patch('memex.storage.expand_uri')
 def test_handle_message_expands_uris_in_uri_filter(expand_uri):
     expand_uri.return_value = ['http://example.com',
                                'http://example.com/alter',
