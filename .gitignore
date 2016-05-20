@@ -12,6 +12,7 @@ node_modules/
 .eggs/
 *.egg
 *.egg-info
+.pydeps
 
 # development TLS cert/key
 .tlscert.pem

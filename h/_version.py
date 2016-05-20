@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import datetime
 import os
 import re
 import subprocess
@@ -33,15 +34,11 @@ def parse_version(ver):
 
 def pep440_version(ver_dict):
     """Convert a version dictionary into a PEP440 version."""
-    if 'tag' not in ver_dict:
-        return VERSION_UNKNOWN
-    tag = ver_dict['tag']
+    date = datetime.datetime.utcnow().strftime('%Y%m%d')
     local = '.'.join([ver_dict[x]
-                      for x in ['commits', 'sha', 'dirty']
+                      for x in ['sha', 'dirty']
                       if x in ver_dict])
-    if not local:
-        return tag
-    return '{}+{}'.format(tag, local)
+    return '{}+{}'.format(date, local)
 
 
 def get_version():

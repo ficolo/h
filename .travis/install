@@ -7,7 +7,7 @@ case "$ACTION" in
         npm install
         ;;
     extensions)
-        pip install --use-wheel -e .
+        pip install --use-wheel -r requirements.txt
         npm install
         # trick the Makefile into skipping npm install
         touch node_modules/.uptodate
