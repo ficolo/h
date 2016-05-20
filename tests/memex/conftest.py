@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
+import functools
 import os
 
+import mock
 import pytest
 from sqlalchemy import engine_from_config
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -9,6 +11,16 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from memex import db
 
 Session = scoped_session(sessionmaker())
+
+
+def autopatcher(request, target, **kwargs):
+    """Patch and cleanup automatically. Wraps :py:func:`mock.patch`."""
+    options = {'autospec': True}
+    options.update(kwargs)
+    patcher = mock.patch(target, **options)
+    obj = patcher.start()
+    request.addfinalizer(patcher.stop)
+    return obj
 
 
 @pytest.fixture
@@ -60,3 +72,8 @@ def setup_database(request, settings):
     db.bind_engine(engine, should_create=True, should_drop=True)
     db.use_session(Session)
     request.addfinalizer(Session.remove)
+
+
+@pytest.fixture
+def patch(request):
+    return functools.partial(autopatcher, request)
