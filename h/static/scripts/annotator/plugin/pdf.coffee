@@ -36,7 +36,7 @@ module.exports = class PDF extends Annotator.Plugin
 
   uri: ->
     @documentLoaded.then ->
-      PDFViewerApplication.url
+      "urn:x-pdf:" + PDFViewerApplication.documentFingerprint
 
   getMetadata: ->
     @documentLoaded.then ->
