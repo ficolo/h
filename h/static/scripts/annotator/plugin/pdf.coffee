@@ -13,14 +13,11 @@ module.exports = class PDF extends Annotator.Plugin
     @pdfViewer = PDFViewerApplication.pdfViewer
     @pdfViewer.viewer.classList.add('has-transparent-text-layer')
 
-    if PDFViewerApplication.loading
-      @documentLoaded = new Promise (resolve) ->
-        finish = (evt) ->
-          window.removeEventListener('documentload', finish)
-          resolve()
-        window.addEventListener('documentload', finish)
-    else
-      @documentLoaded = Promise.resolve()
+    @documentLoaded = new Promise (resolve) ->
+      finish = (evt) ->
+        window.removeEventListener('documentload', finish)
+        resolve()
+      window.addEventListener('documentload', finish)
 
     @observer = new MutationObserver((mutations) => this._update())
     @observer.observe(@pdfViewer.viewer, {
