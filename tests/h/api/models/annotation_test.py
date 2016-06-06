@@ -83,6 +83,60 @@ def test_acl_group_shared():
     assert actual == expect
 
 
+def test_setting_extras_inline_is_persisted(db_session):
+    """
+    In-place changes to Annotation.extra should be persisted.
+
+    Setting an Annotation.extra value in-place:
+
+        my_annotation.extra['foo'] = 'bar'
+
+    should be persisted to the database.
+
+    """
+    annotation = Annotation(userid='fred')
+    annotation.extra = {}  # FIXME: There should be a default value for this.
+
+    # Add the annotation to the db so that annotation.id gets generated.
+    db_session.add(annotation)
+
+    # We need to flush the db here so that the initial value of {} for
+    # annotation.tags gets persisted, otherwise this test would never fail.
+    db_session.flush()
+
+    # Make an in-place change to annotation.extra.
+    annotation.extra['foo'] = 'bar'
+
+    # We need to commit the db session here so that the in-place change to
+    # annotation.extra above would be lost if annotation.extra was a normal
+    # dict. Without this commit() this test would never fail.
+    db_session.commit()
+
+    annotation = Annotation.query.get(annotation.id)
+
+    assert annotation.extra == {'foo': 'bar'}
+
+
+def test_deleting_extras_inline_is_persisted(db_session):
+    """
+    In-place changes to Annotation.extra should be persisted.
+
+    Deleting an Annotation.extra value in-place should be persisted to the
+    database.
+
+    """
+    annotation = Annotation(userid='fred')
+    annotation.extra = {'foo': 'bar'}
+    db_session.add(annotation)
+    db_session.flush()
+
+    del annotation.extra['foo']
+    db_session.commit()
+    annotation = Annotation.query.get(annotation.id)
+
+    assert 'foo' not in annotation.extra
+
+
 @pytest.fixture
 def annotation(db_session):
     ann = Annotation(userid="testuser", target_uri="http://example.com")

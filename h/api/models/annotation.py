@@ -7,6 +7,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql as pg
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy.ext.mutable import MutableDict
 
 from h.api import uri
 from h.api.db import Base
@@ -78,7 +79,7 @@ class Annotation(Base, mixins.Timestamps):
                            server_default=sa.text('ARRAY[]::uuid[]'))
 
     #: Any additional serialisable data provided by the client.
-    extra = sa.Column(pg.JSONB, nullable=True)
+    extra = sa.Column(MutableDict.as_mutable(pg.JSONB), nullable=True)
 
     document = sa.orm.relationship('Document',
                                    secondary='join(DocumentURI, Document, DocumentURI.document_id == Document.id)',
