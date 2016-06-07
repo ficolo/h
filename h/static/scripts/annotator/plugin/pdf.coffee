@@ -1,7 +1,6 @@
 extend = require('extend')
 Annotator = require('annotator')
 
-
 module.exports = class PDF extends Annotator.Plugin
   documentLoaded: null
   observer: null
@@ -9,15 +8,12 @@ module.exports = class PDF extends Annotator.Plugin
 
   pluginInit: ->
     @annotator.anchoring = require('../anchoring/pdf')
+    PDFMetadata = require('./pdf-metadata')
 
     @pdfViewer = PDFViewerApplication.pdfViewer
     @pdfViewer.viewer.classList.add('has-transparent-text-layer')
 
-    @documentLoaded = new Promise (resolve) ->
-      finish = (evt) ->
-        window.removeEventListener('documentload', finish)
-        resolve()
-      window.addEventListener('documentload', finish)
+    @pdfMetadata = new PDFMetadata(PDFViewerApplication)
 
     @observer = new MutationObserver((mutations) => this._update())
     @observer.observe(@pdfViewer.viewer, {
@@ -32,29 +28,10 @@ module.exports = class PDF extends Annotator.Plugin
     @observer.disconnect()
 
   uri: ->
-    @documentLoaded.then ->
-      "urn:x-pdf:" + PDFViewerApplication.documentFingerprint
+    @pdfMetadata.urn()
 
   getMetadata: ->
-    @documentLoaded.then ->
-      info = PDFViewerApplication.documentInfo
-      metadata = PDFViewerApplication.metadata
-
-      # Taken from PDFViewerApplication#load
-      if metadata?.has('dc:title') and metadata.get('dc:title') isnt 'Untitled'
-        title = metadata.get('dc:title')
-      else if info?['Title']
-        title = info['Title']
-      else
-        title = document.title
-
-      # This is an experimental URN,
-      # as per http://tools.ietf.org/html/rfc3406#section-3.0
-      urn = "urn:x-pdf:" + PDFViewerApplication.documentFingerprint
-      link = [{href: urn}, {href: PDFViewerApplication.url}]
-      documentFingerprint = PDFViewerApplication.documentFingerprint
-
-      return {title, link, documentFingerprint}
+    @pdfMetadata.metadata()
 
   # This method (re-)anchors annotations when pages are rendered and destroyed.
   _update: ->
